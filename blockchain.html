@@ -1,0 +1,368 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+ <head>
+   <meta charset="UTF-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <!--CSS file link-->
+   <link rel="stylesheet" href="{% static 'ideamall/css/Blockchain.css' %}">
+   <title>Blockchain</title>
+ </head>
+ 
+ <style id = "target"> 
+   #modalContainer {
+     background-color:rgba(0, 0, 0, 0.3);
+     position:absolute;
+     top:0;
+     width:100%;
+     height:100%;
+     left:0px;
+     z-index:10000;
+     background-image:url(tp.png); /* required by MSIE to prevent actions on lower z-index elements */
+   }
+   
+   #alertBox {
+     position:relative;
+     width:33%;
+     min-height:100px;
+     max-height:400px;
+     margin-top:50px;
+     border:1px solid #fff;
+     background-color: #E0FFFF;
+     background-repeat:no-repeat;
+     top:30%;
+   }
+   
+   #modalContainer > #alertBox {
+     position:fixed;
+   }
+   
+   #alertBox h1 {
+     margin:0;
+     font:bold 1em Raleway,arial;
+     background-color: #8961c6;
+     color:#FFF;
+     border-bottom:1px solid #f97352;
+     padding:10px 0 10px 5px;
+   }
+   
+   #alertBox p {
+     height:50px;
+     padding-left:5px;
+     padding-top:30px;
+     text-align:center;
+     vertical-align:middle;
+   }
+   
+   #alertBox #closeBtn {
+     display:block;
+     position:relative;
+     margin:10px auto 10px auto;
+     padding:7px;
+     border:0 none;
+     width:70px;
+     text-transform:uppercase;
+     text-align:center;
+     color:#FFF;
+     background-color:#f97352;
+     border-radius: 0px;
+     text-decoration:none;
+     outline:0!important;
+   }
+   
+   /* unrelated styles */
+   
+   #mContainer {
+     position:relative;
+     width:600px;
+     margin:auto;
+     padding:5px;
+     border-top:2px solid #fff;
+     border-bottom:2px solid #fff;
+   }
+   
+   h1,h2 {
+     margin:0;
+     padding:4px;
+   }
+   
+   code {
+     font-size:1.2em;
+     color:#069;
+   }
+   
+   #credits {
+     position:relative;
+     margin:25px auto 0px auto;
+     width:350px; 
+     font:0.7em verdana;
+     border-top:1px solid #000;
+     border-bottom:1px solid #000;
+     height:90px;
+     padding-top:4px;
+   }
+   
+   #credits img {
+     float:left;
+     margin:5px 10px 5px 0px;
+     border:1px solid #000000;
+     width:80px;
+     height:79px;
+   }
+   
+   .important {
+     background-color:#F5FCC8;
+     padding:2px;
+   
+   }
+   
+   @media (max-width: 600px) 
+   {
+     #alertBox {
+     position:relative;
+     width:90%;
+     top:30%;
+   }
+   }
+ </style>
+ <body>
+   <header>
+
+     <div> <h1>Fetch Data From Blockchain</h1>
+     <div>
+       <form method="post" class="text-align" action={% url 'fetch_from_blockchain' %}>
+         {% csrf_token %}
+         <div class="choose-file-div">
+           <label for="Files">Choose a file </label>
+           <select name="file_type" id="file" >
+             <option value="onepager">One Pager</option>
+             <option value="story">story</option>
+             <option value="samplescript">Sample Script</option>
+             <option value="fullscript">Full Script</option>
+             <option value="footage">Footage</option>
+             <option value="pitchdeck">PitchDeck</option>
+             <option value="samplenarration">Sample Narration</option>
+             <option value="scriptanalysis">Script Analysis</option>
+             <option value="fullnarration">Full Narration</option>
+             <option value="characterintro">Character Introduction</option>
+             <option value="convertPPT">Convert PPT</option>
+             <option value="convertBook">Convert Book</option>
+             <option value="convertStory">Convert Story</option>
+             <option value="convertScript">Convert Script</option>
+             <option value="pitchdeckNarration">Narration Bundle</option>
+             <option value="viewerLoungevideo">viewer's Lounge Video</option>
+             <option value="viewerLoungelink">viewer's Lounge Link</option>
+             <option value="scriptpad">Scriptpad</option>
+             <option value="previewchamber">Preview Chamber</option>
+             <option value="projectCenter">Project Center</option>
+             <option value="subscription">Claim your Privileges</option>
+           </select>
+         </div>
+         <br /><br />
+         <input name="project_title" type="text" placeholder="Enter key" required /><br />
+         <input name="time_stamp" type="number" placeholder="Enter time stamp" required />
+         <br />
+         <button class="btn2" id ="fetch_data"  type="submit">Fetch Data</button>
+
+         {% if cid %} 
+         {% if service == 'subscription'%}
+         <script> 
+          
+          {% autoescape off %}
+           var cid1 ={{cid}}
+          {% endautoescape %}
+          var ALERT_TITLE = "Fetch subscription details From Blockchain";
+          var ALERT_BUTTON_TEXT = "Ok";
+   
+          if(document.getElementById) {
+            window.alert = function(txt) {
+              createCustomAlert(txt);
+            }
+          }
+   
+          function createCustomAlert(txt) {
+            d = document;
+   
+            if(d.getElementById("modalContainer")) return;
+   
+            mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+            mObj.id = "modalContainer";
+            mObj.style.height = d.documentElement.scrollHeight + "px";
+            
+            alertObj = mObj.appendChild(d.createElement("div"));
+            alertObj.id = "alertBox";
+            if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+            alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+            alertObj.style.visiblity="visible";
+   
+            h1 = alertObj.appendChild(d.createElement("h1"));
+            h1.appendChild(d.createTextNode(ALERT_TITLE));
+   
+            msg = alertObj.appendChild(d.createElement("p"));
+            //msg.appendChild(d.createTextNode(txt));
+            msg.innerHTML = txt;
+   
+            btn = alertObj.appendChild(d.createElement("a"));
+            btn.id = "closeBtn";
+            btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+            btn.href = "#";
+            btn.focus();
+            btn.onclick = function() { removeCustomAlert();return false; }
+   
+            alertObj.style.display = "block";
+            
+          }
+   
+          function removeCustomAlert() {
+            document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+          }
+
+         alert('your subscription valid from '+cid1);
+          
+        </script>
+         {% else %}
+         {% for i in cid %}
+         <span><a class="showdata btn " id="your_data" href={{ i }} target="_blank">Show Your Data</a></span> 
+       {% endfor %}
+       {% endif %}
+       {% endif %}
+     </form>
+     </div>
+     </div>
+
+   </div>
+
+   <div> <h1> Verify From Blockchain </div>
+     <div class="text-align">
+       <form method="post" class="text-align" action={% url 'verfyFromBlockchain' %}>
+         {% csrf_token %}
+       <input name="User_name" type="text" placeholder="Enter User Name" required /><br />
+     <input name="project_title" type="text" placeholder="Enter File Name" required /><br />
+     <input name="time_stamp" type="number" placeholder="Enter time Stamp" required />
+     <br />
+     <button class="btn" type="submit">Verify</button>
+    
+     {%if verify%}
+     
+     <script>
+       var ALERT_TITLE = "Verify From Blockchain";
+       var ALERT_BUTTON_TEXT = "Ok";
+
+       if(document.getElementById) {
+         window.alert = function(txt) {
+           createCustomAlert(txt);
+         }
+       }
+
+       function createCustomAlert(txt) {
+         d = document;
+
+         if(d.getElementById("modalContainer")) return;
+
+         mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+         mObj.id = "modalContainer";
+         mObj.style.height = d.documentElement.scrollHeight + "px";
+         
+         alertObj = mObj.appendChild(d.createElement("div"));
+         alertObj.id = "alertBox";
+         if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+         alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+         alertObj.style.visiblity="visible";
+
+         h1 = alertObj.appendChild(d.createElement("h1"));
+         h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+         msg = alertObj.appendChild(d.createElement("p"));
+         //msg.appendChild(d.createTextNode(txt));
+         msg.innerHTML = txt;
+
+         btn = alertObj.appendChild(d.createElement("a"));
+         btn.id = "closeBtn";
+         btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+         btn.href = "#";
+         btn.focus();
+         btn.onclick = function() { removeCustomAlert();return false; }
+
+         alertObj.style.display = "block";
+         
+       }
+
+       function removeCustomAlert() {
+         document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+       }
+       alert('This Data Exist On Blockchain !'); 
+      
+     </script>
+
+     {%endif%} 
+     {%if verify == False%}
+     <script>
+       var ALERT_TITLE = "Verify From Blockchain";
+       var ALERT_BUTTON_TEXT = "Ok";
+
+       if(document.getElementById) {
+         window.alert = function(txt) {
+           createCustomAlert(txt);
+         }
+       }
+
+       function createCustomAlert(txt) {
+         d = document;
+
+         if(d.getElementById("modalContainer")) return;
+
+         mObj = d.getElementsByTagName("body")[0].appendChild(d.createElement("div"));
+         mObj.id = "modalContainer";
+         mObj.style.height = d.documentElement.scrollHeight + "px";
+         
+         alertObj = mObj.appendChild(d.createElement("div"));
+         alertObj.id = "alertBox";
+         if(d.all && !window.opera) alertObj.style.top = document.documentElement.scrollTop + "px";
+         alertObj.style.left = (d.documentElement.scrollWidth - alertObj.offsetWidth)/2 + "px";
+         alertObj.style.visiblity="visible";
+
+         h1 = alertObj.appendChild(d.createElement("h1"));
+         h1.appendChild(d.createTextNode(ALERT_TITLE));
+
+         msg = alertObj.appendChild(d.createElement("p"));
+         //msg.appendChild(d.createTextNode(txt));
+         msg.innerHTML = txt;
+
+         btn = alertObj.appendChild(d.createElement("a"));
+         btn.id = "closeBtn";
+         btn.appendChild(d.createTextNode(ALERT_BUTTON_TEXT));
+         btn.href = "#";
+         btn.focus();
+         btn.onclick = function() { removeCustomAlert();return false; }
+
+         alertObj.style.display = "block";
+         
+       }
+
+       function removeCustomAlert() {
+         document.getElementsByTagName("body")[0].removeChild(document.getElementById("modalContainer"));
+       }
+       alert('This Data Does Not Exist On Blockchain !');
+     </script>
+
+     {%endif%}
+   </form>
+
+
+     </div>
+   </header>
+   <script>
+     function handleChange10(value) {
+       if (value === "subscription") {
+       $('#your_data').style.display = "block"; 
+       } else {
+         $('#your_data').style.display = "none"; 
+       }
+   }
+   
+       </script>
+ </body>
+
+</html>
